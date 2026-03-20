@@ -2,13 +2,13 @@ package dev.sorn.orc.module;
 
 import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.api.ToolRegistry;
-import dev.sorn.orc.errors.ToolError;
+import dev.sorn.orc.errors.Error;
 import dev.sorn.orc.types.Id;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AppToolRegistry implements ToolRegistry {
+public final class AppToolRegistry implements ToolRegistry {
 
     private final Map<Id, Tool<?, ?>> tools = new ConcurrentHashMap<>();
 
@@ -16,7 +16,7 @@ public class AppToolRegistry implements ToolRegistry {
     public Tool<?, ?> get(Id id) {
         final var tool = tools.get(id);
         if (tool == null) {
-            throw new ToolError("'%s' tool is not registered", id.value());
+            throw new Error("'%s' tool is not registered", id.value());
         }
         return tool;
     }

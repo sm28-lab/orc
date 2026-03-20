@@ -2,7 +2,7 @@ package dev.sorn.orc.tools;
 
 import dev.sorn.orc.api.ReaderFactory;
 import dev.sorn.orc.api.Tool;
-import dev.sorn.orc.errors.ToolError;
+import dev.sorn.orc.errors.Error;
 import dev.sorn.orc.types.LineNumber;
 import dev.sorn.orc.types.LineNumberRange;
 import dev.sorn.orc.types.Result;
@@ -45,7 +45,7 @@ public final class FileReaderTool implements Tool<FileReaderTool.Input, String> 
                 .orElse("");
             return ok(result);
         } catch (IOException e) {
-            return error(new ToolError(e));
+            return error(new Error(e));
         }
     }
 

@@ -1,7 +1,7 @@
 package dev.sorn.orc.tools;
 
 import dev.sorn.orc.api.Tool;
-import dev.sorn.orc.errors.ToolError;
+import dev.sorn.orc.errors.Error;
 import dev.sorn.orc.types.Result;
 import dev.sorn.orc.types.Id;
 
@@ -28,10 +28,10 @@ public final class ListDirectoryContentsTool implements Tool<Path, List<String>>
     public Result<List<String>> execute(Path directory) {
         try {
             if (!exists(directory)) {
-                throw new ToolError("'%s' directory not found", directory);
+                throw new Error("'%s' directory not found", directory);
             }
             if (!isDirectory(directory)) {
-                throw new ToolError("'%s' is not a directory", directory);
+                throw new Error("'%s' is not a directory", directory);
             }
             try (final var stream = list(directory)) {
                 final var list = stream
@@ -41,7 +41,7 @@ public final class ListDirectoryContentsTool implements Tool<Path, List<String>>
                 return list.isEmpty() ? empty() : ok(list);
             }
         } catch (Exception e) {
-            return error(new ToolError(e));
+            return error(new Error(e));
         }
     }
 

@@ -62,7 +62,7 @@ class ListDirectoryContentsToolSpec extends OrcSpecification {
         then:
         result.isError()
         with(result.getError()) { err ->
-            err.getMessage() == "dev.sorn.orc.errors.ToolError: '${tempDir.toString()}/some_invalid_path' directory not found"
+            err.getMessage() == "dev.sorn.orc.errors.Error: '${tempDir.toString()}/some_invalid_path' directory not found"
         }
 
         and:
@@ -81,7 +81,7 @@ class ListDirectoryContentsToolSpec extends OrcSpecification {
         then:
         result.isError()
         with(result.getError()) { err ->
-            err.getMessage() == "dev.sorn.orc.errors.ToolError: '${file.toString()}' is not a directory"
+            err.getMessage() == "dev.sorn.orc.errors.Error: '${file.toString()}' is not a directory"
         }
 
         and:

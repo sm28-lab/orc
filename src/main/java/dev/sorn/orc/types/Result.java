@@ -1,12 +1,12 @@
 package dev.sorn.orc.types;
 
-import dev.sorn.orc.errors.ToolError;
+import dev.sorn.orc.errors.Error;
 import io.vavr.control.Option;
 
 import static io.vavr.control.Option.none;
 import static io.vavr.control.Option.some;
 
-public record Result<T>(Option<T> value, Option<ToolError> error) {
+public record Result<T>(Option<T> value, Option<Error> error) {
 
     public static <T> Result<T> ok(T value) {
         return new Result<>(some(value), none());
@@ -16,7 +16,7 @@ public record Result<T>(Option<T> value, Option<ToolError> error) {
         return new Result<>(none(), none());
     }
 
-    public static <T> Result<T> error(ToolError error) {
+    public static <T> Result<T> error(Error error) {
         return new Result<>(none(), some(error));
     }
 
@@ -24,7 +24,7 @@ public record Result<T>(Option<T> value, Option<ToolError> error) {
         return value.get();
     }
 
-    public ToolError getError() {
+    public Error getError() {
         return error.get();
     }
 

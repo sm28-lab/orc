@@ -1,7 +1,7 @@
 package dev.sorn.orc.module
 
 import dev.sorn.orc.OrcSpecification
-import dev.sorn.orc.errors.ToolError
+import dev.sorn.orc.errors.Error
 import dev.sorn.orc.tools.ListDirectoryContentsTool
 import dev.sorn.orc.tools.PrintWorkingDirectoryTool
 import dev.sorn.orc.types.Id
@@ -45,7 +45,7 @@ class AppToolRegistrySpec extends OrcSpecification {
         registry.get(Id.of("non_existent_tool"))
 
         then:
-        def ex = thrown(ToolError)
+        def ex = thrown(Error)
         ex.message == "'non_existent_tool' tool is not registered"
     }
 

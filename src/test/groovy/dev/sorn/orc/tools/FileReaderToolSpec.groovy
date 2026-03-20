@@ -1,7 +1,7 @@
 package dev.sorn.orc.tools
 
 import dev.sorn.orc.OrcSpecification
-import dev.sorn.orc.errors.ToolError
+import dev.sorn.orc.errors.Error
 import dev.sorn.orc.types.LineNumberRange
 import spock.lang.TempDir
 
@@ -69,7 +69,7 @@ class FileReaderToolSpec extends OrcSpecification {
 
         then:
         result.isError()
-        result.getError() instanceof ToolError
+        result.getError() instanceof Error
     }
 
 }
