@@ -37,4 +37,9 @@ public final class ListDirectoryContentsTool implements Tool<Path, List<String>>
         }
     }
 
+    @Override
+    public Class<Path> inputType() {
+        return Path.class;
+    }
+
 }
