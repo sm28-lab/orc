@@ -1,18 +1,32 @@
 package dev.sorn.orc
 
+import dev.sorn.orc.api.ReaderFactory
 import dev.sorn.orc.api.ToolRegistry
 import dev.sorn.orc.module.AppToolRegistry
+import dev.sorn.orc.tools.FileReaderTool
 import dev.sorn.orc.tools.ListDirectoryContentsTool
 import dev.sorn.orc.tools.PrintWorkingDirectoryTool
+import spock.lang.Shared
 import spock.lang.Specification
+
+import java.nio.file.Path
+
+import static java.nio.file.Files.newBufferedReader
 
 class OrcSpecification extends Specification {
 
-    static ToolRegistry toolRegistry = new AppToolRegistry()
+    @Shared
+    ToolRegistry toolRegistry = new AppToolRegistry()
 
-    static {
+    @Shared
+    ReaderFactory readerFactory = Mock(ReaderFactory) {
+        create(_ as Path) >> { Path file -> newBufferedReader(file) }
+    }
+
+    def setupSpec() {
         toolRegistry.register(new ListDirectoryContentsTool())
         toolRegistry.register(new PrintWorkingDirectoryTool())
+        toolRegistry.register(new FileReaderTool(readerFactory))
     }
 
 }

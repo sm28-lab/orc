@@ -21,6 +21,10 @@ public record LineNumberRange(
         }
     }
 
+    public static LineNumberRange of(int fromLineNumberInclusive, int toLineNumberExclusive) {
+        return of(LineNumber.of(fromLineNumberInclusive), LineNumber.of(toLineNumberExclusive));
+    }
+
     public static LineNumberRange of(LineNumber fromLineNumberInclusive, LineNumber toLineNumberExclusive) {
         return new LineNumberRange(Option.of(fromLineNumberInclusive), Option.of(toLineNumberExclusive));
     }
