@@ -1,0 +1,33 @@
+{
+  "agents": [
+    {
+      "id": "code_reviewer_agent",
+      "role": "worker",
+      "toolIds": [
+        "file_reader_tool",
+        "list_directory_contents_tool",
+        "print_working_directory_tool"
+      ],
+      "input": [
+        {
+          "type": "string",
+          "name": "code"
+        }
+      ],
+      "output": [
+        {
+          "type": "collection",
+          "name": "review_comment"
+        },
+        {
+          "type": "boolean",
+          "name": "review_approved"
+        }
+      ],
+      "instructions": [
+        "Check given code adheres to SOLID principles",
+        "Check given code adheres to DRY"
+      ]
+    }
+  ]
+}

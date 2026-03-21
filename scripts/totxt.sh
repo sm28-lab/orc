@@ -5,7 +5,7 @@ ROOT_DIR="$(pwd)"
 
 > "$OUTPUT_FILE"
 
-find "$ROOT_DIR" -type f \( -name "*.java" -o -name "*.groovy" -o -name "*.gradle" \) ! -path "*/build/*" -print0 | \
+find "$ROOT_DIR" -type f \( -name "*.java" -o -name "*.groovy" -o -name "*.md" -o -name "*.json" -o -name "*.gradle" \) ! -path "*/build/*" -print0 | \
 sort -z | \
 while IFS= read -r -d '' file; do
     relative_path="${file#$ROOT_DIR/}"
