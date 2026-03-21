@@ -41,4 +41,5 @@ public class StubLlmClient implements LlmClient {
     public void setDefaultResponse(String defaultResponse) {
         this.defaultResponse = defaultResponse;
     }
+
 }

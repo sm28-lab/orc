@@ -9,6 +9,7 @@ import dev.sorn.orc.types.Id;
 import io.vavr.collection.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+
 import static dev.sorn.orc.agents.DefaultAgent.Builder.defaultAgent;
 import static dev.sorn.orc.api.Result.Success;
 import static dev.sorn.orc.types.AgentRole.WORKER;
@@ -62,7 +63,19 @@ class DefaultAgentTest implements DefaultAgentTestData {
                 GIVEN: Instruction1
                 WHEN: Instruction2
 
-                ## Prompt
+                ## Tool Usage Rules
+                You can use tools by outputting a tool call in the following strict format:
+                <tool_call>
+                {
+                  "tool": "tool_id",
+                  "arguments": {
+                    ... arguments as JSON ...
+                  }
+                }
+                </tool_call>
+                You may output multiple tool calls. After each tool call you will receive the result. Then you can output more tool calls or the final answer.
+
+                ## User Input
                 My prompt
                 """);
         result.fold(

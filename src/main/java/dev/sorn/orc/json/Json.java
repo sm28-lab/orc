@@ -34,4 +34,11 @@ public final class Json {
         return JsonNodeFactory.instance.objectNode();
     }
 
+    public static <T> T fromJsonNode(JsonNode node, Class<T> type) {
+        if (type == Void.class) {
+            return null;
+        }
+        return mapper.treeToValue(node, type);
+    }
+
 }

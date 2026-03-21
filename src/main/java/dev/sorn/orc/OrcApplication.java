@@ -54,20 +54,21 @@ public class OrcApplication {
             System.out.println("Outputs: " + agent.outputs());
             System.out.println("Instructions: " + agent.instructions());
 
-            agent.complete("""
-                public class Main {
-                    public static void main() {
-                        System.out.println("Test");
-                    }
-                }
-                """).fold(
+            var result = agent.complete("Find an review \"AgentData.java\"");
+
+            result.fold(
                 val -> {
-                    System.out.println(val);
+                    if (val == null || val.isBlank()) {
+                        System.out.println("[Empty response]");
+                    } else {
+                        System.out.println(val);
+                    }
                     return val;
                 },
-                err -> err);
+                err -> {
+                    System.err.println("Error: " + err.getMessage());
+                    return err;
+                });
         });
-
     }
-
 }

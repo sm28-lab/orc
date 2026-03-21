@@ -1,18 +1,15 @@
 package dev.sorn.orc.tools;
 
+import dev.sorn.orc.api.Result;
 import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.errors.OrcException;
-import dev.sorn.orc.api.Result;
 import dev.sorn.orc.types.Id;
-import dev.sorn.orc.api.Result.Failure;
-import dev.sorn.orc.api.Result.Success;
+import tools.jackson.databind.JsonNode;
 
 import java.nio.file.Path;
 import java.util.List;
 
-import static java.nio.file.Files.exists;
-import static java.nio.file.Files.isDirectory;
-import static java.nio.file.Files.list;
+import static java.nio.file.Files.*;
 
 public final class ListDirectoryContentsTool implements Tool<Path, List<String>> {
 
@@ -32,16 +29,37 @@ public final class ListDirectoryContentsTool implements Tool<Path, List<String>>
             if (!isDirectory(directory)) {
                 throw new OrcException("'%s' is not a directory", directory);
             }
-            try (final var stream = list(directory)) {
-                final var list = stream
+            try (var stream = list(directory)) {
+                var list = stream
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .toList();
-                return Success.of(list);
+                return Result.Success.of(list);
             }
         } catch (Exception e) {
-            return Failure.of(new OrcException(e));
+            return Result.Failure.of(new OrcException(e));
         }
+    }
+
+    @Override
+    public Class<Path> inputType() {
+        return Path.class;
+    }
+
+    @Override
+    public Path parseArguments(JsonNode node) {
+        if (node.isTextual()) {
+            return Path.of(node.asText());
+        }
+        if (node.isObject() && node.has("path")) {
+            return Path.of(node.get("path").asText());
+        }
+        throw new OrcException("Expected string path or object with 'path' field");
+    }
+
+    @Override
+    public String inputDescription() {
+        return "The path to a directory as a string, or an object with a 'path' field.";
     }
 
 }

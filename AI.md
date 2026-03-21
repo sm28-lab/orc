@@ -9,6 +9,9 @@
 * Adhere to SOLID principles.
 * Adhere to DRY.
 * Follow TDD (always write specs/tests first).
+* Never add comments to code.
+* Minimal changes to achieve result.
+* Small, focused classes, and interface segregation.
 
 ### Code Style
 

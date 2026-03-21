@@ -1,9 +1,9 @@
 package dev.sorn.orc.tools;
 
-import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.api.Result;
+import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.types.Id;
-import dev.sorn.orc.api.Result.Success;
+import tools.jackson.databind.JsonNode;
 
 import java.nio.file.Path;
 
@@ -20,7 +20,22 @@ public class PrintWorkingDirectoryTool implements Tool<Void, Path> {
 
     @Override
     public Result<Path> execute(Void input) {
-        return Success.of(Path.of(getProperty("user.dir")));
+        return Result.Success.of(Path.of(getProperty("user.dir")));
+    }
+
+    @Override
+    public Class<Void> inputType() {
+        return Void.class;
+    }
+
+    @Override
+    public Void parseArguments(JsonNode node) {
+        return null;
+    }
+
+    @Override
+    public String inputDescription() {
+        return "No arguments needed (can be null or empty object).";
     }
 
 }

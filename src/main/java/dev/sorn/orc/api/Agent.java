@@ -8,7 +8,7 @@ import io.vavr.collection.List;
 
 public interface Agent {
 
-    Result<?> complete(String prompt);
+    Result<String> complete(String prompt);
 
     Id id();
 
@@ -21,4 +21,5 @@ public interface Agent {
     List<AgentData> outputs();
 
     List<BddInstruction> instructions();
+
 }

@@ -5,7 +5,7 @@
       "role": "worker",
       "modelId": "qwen3:14b",
       "baseUrl": "http://127.0.0.1:11434",
-      "maxTokens": 2048,
+      "maxTokens": 8192,
       "toolIds": [
         "file_reader_tool",
         "list_directory_contents_tool",
