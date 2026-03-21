@@ -1,4 +1,4 @@
-package dev.sorn.orc.types;
+package dev.sorn.orc.api;
 
 import dev.sorn.orc.errors.OrcException;
 

@@ -5,15 +5,14 @@ import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.LineNumber;
 import dev.sorn.orc.types.LineNumberRange;
-import dev.sorn.orc.types.Result;
+import dev.sorn.orc.api.Result;
 import dev.sorn.orc.types.Id;
-import dev.sorn.orc.types.Result.Failure;
-import dev.sorn.orc.types.Result.Success;
+import dev.sorn.orc.api.Result.Failure;
+import dev.sorn.orc.api.Result.Success;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.stream.Collectors.joining;

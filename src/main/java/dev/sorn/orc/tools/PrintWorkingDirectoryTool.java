@@ -1,9 +1,9 @@
 package dev.sorn.orc.tools;
 
 import dev.sorn.orc.api.Tool;
-import dev.sorn.orc.types.Result;
+import dev.sorn.orc.api.Result;
 import dev.sorn.orc.types.Id;
-import dev.sorn.orc.types.Result.Success;
+import dev.sorn.orc.api.Result.Success;
 
 import java.nio.file.Path;
 

@@ -2,11 +2,11 @@ package dev.sorn.orc.tools;
 
 import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.errors.OrcException;
-import dev.sorn.orc.types.Result;
+import dev.sorn.orc.api.Result;
 import dev.sorn.orc.types.Id;
-import dev.sorn.orc.types.Result.Empty;
-import dev.sorn.orc.types.Result.Failure;
-import dev.sorn.orc.types.Result.Success;
+import dev.sorn.orc.api.Result.Empty;
+import dev.sorn.orc.api.Result.Failure;
+import dev.sorn.orc.api.Result.Success;
 
 import java.nio.file.Path;
 import java.util.List;

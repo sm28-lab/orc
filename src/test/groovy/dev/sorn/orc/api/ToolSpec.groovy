@@ -1,7 +1,6 @@
 package dev.sorn.orc.api
 
 import dev.sorn.orc.OrcSpecification
-import dev.sorn.orc.types.Result
 import dev.sorn.orc.types.Id
 
 class ToolSpec extends OrcSpecification {
