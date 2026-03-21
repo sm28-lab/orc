@@ -10,7 +10,6 @@ import dev.sorn.orc.tools.GrepTool;
 import dev.sorn.orc.tools.ListDirectoryContentsTool;
 import dev.sorn.orc.tools.PrintWorkingDirectoryTool;
 import dev.sorn.orc.types.Id;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -18,7 +17,6 @@ import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-
 import static dev.sorn.orc.agents.DefaultAgent.Builder.defaultAgent;
 import static java.nio.file.Files.readString;
 

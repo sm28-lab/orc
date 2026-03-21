@@ -1,7 +1,6 @@
 package dev.sorn.orc.api;
 
 import tools.jackson.databind.JsonNode;
-
 import java.net.URI;
 
 public interface JsonHttpClient extends HttpClient<JsonNode, JsonNode> {

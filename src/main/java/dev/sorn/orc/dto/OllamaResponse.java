@@ -2,7 +2,6 @@ package dev.sorn.orc.dto;
 
 import io.vavr.collection.List;
 import tools.jackson.databind.JsonNode;
-
 import static io.vavr.collection.List.ofAll;
 
 public record OllamaResponse(

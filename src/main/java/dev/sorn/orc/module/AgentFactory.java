@@ -1,10 +1,13 @@
 package dev.sorn.orc.module;
 
-import dev.sorn.orc.types.*;
+import dev.sorn.orc.types.AgentData;
+import dev.sorn.orc.types.AgentDefinition;
+import dev.sorn.orc.types.AgentRole;
+import dev.sorn.orc.types.BddInstruction;
+import dev.sorn.orc.types.Id;
 import io.vavr.collection.List;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ArrayNode;
-
 import static dev.sorn.orc.json.Json.fromJson;
 import static io.vavr.collection.List.ofAll;
 

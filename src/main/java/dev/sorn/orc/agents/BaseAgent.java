@@ -1,18 +1,16 @@
 package dev.sorn.orc.agents;
 
 import dev.sorn.orc.api.Agent;
-import dev.sorn.orc.types.AgentDefinition;
 import dev.sorn.orc.api.LlmClient;
 import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.api.ToolRegistry;
 import dev.sorn.orc.types.AgentData;
+import dev.sorn.orc.types.AgentDefinition;
 import dev.sorn.orc.types.AgentRole;
 import dev.sorn.orc.types.BddInstruction;
 import dev.sorn.orc.types.Id;
 import io.vavr.collection.List;
-
 import java.util.Objects;
-
 import static java.util.Objects.hash;
 
 public abstract class BaseAgent implements Agent {

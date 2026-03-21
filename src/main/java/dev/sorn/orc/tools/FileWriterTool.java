@@ -5,7 +5,6 @@ import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
 import tools.jackson.databind.JsonNode;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -7,7 +7,6 @@ import dev.sorn.orc.types.Id;
 import dev.sorn.orc.types.LineNumber;
 import io.vavr.collection.List;
 import tools.jackson.databind.JsonNode;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;

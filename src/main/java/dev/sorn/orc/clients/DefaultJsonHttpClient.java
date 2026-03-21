@@ -5,13 +5,11 @@ import dev.sorn.orc.api.Result;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.json.Json;
 import tools.jackson.databind.JsonNode;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
 import static dev.sorn.orc.json.Json.fromJson;
 import static java.net.http.HttpClient.newHttpClient;
 

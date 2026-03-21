@@ -5,9 +5,7 @@ import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.node.ObjectNode;
-
 import java.net.URI;
-
 import static dev.sorn.orc.api.Result.Failure;
 import static dev.sorn.orc.api.Result.Success.of;
 import static dev.sorn.orc.json.Json.jsonObjectNode;

@@ -3,11 +3,7 @@ package dev.sorn.orc
 import dev.sorn.orc.api.ReaderFactory
 import dev.sorn.orc.api.ToolRegistry
 import dev.sorn.orc.module.AppToolRegistry
-import dev.sorn.orc.tools.FileReaderTool
-import dev.sorn.orc.tools.FileWriterTool
-import dev.sorn.orc.tools.GrepTool
-import dev.sorn.orc.tools.ListDirectoryContentsTool
-import dev.sorn.orc.tools.PrintWorkingDirectoryTool
+import dev.sorn.orc.tools.*
 import spock.lang.Shared
 import spock.lang.Specification
 

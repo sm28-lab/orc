@@ -8,11 +8,9 @@ import dev.sorn.orc.types.Id;
 import dev.sorn.orc.types.LineNumber;
 import dev.sorn.orc.types.LineNumberRange;
 import tools.jackson.databind.JsonNode;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Path;
-
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.stream.Collectors.joining;
 

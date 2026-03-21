@@ -8,9 +8,7 @@ import dev.sorn.orc.api.Result.Success;
 import dev.sorn.orc.dto.OllamaResponse;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
-
 import java.net.URI;
-
 import static dev.sorn.orc.json.Json.jsonObjectNode;
 
 public final class OllamaClient implements LlmClient {

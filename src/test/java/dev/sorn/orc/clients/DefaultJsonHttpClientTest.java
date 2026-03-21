@@ -3,11 +3,9 @@ package dev.sorn.orc.clients;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
-
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
 import static dev.sorn.orc.api.Result.Success;
 import static dev.sorn.orc.json.Json.jsonObjectNode;
 import static java.net.URI.create;

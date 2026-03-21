@@ -3,7 +3,6 @@ package dev.sorn.orc.types;
 
 import io.vavr.control.Option;
 import jakarta.validation.ValidationException;
-
 import static io.vavr.control.Option.none;
 
 public record LineNumberRange(

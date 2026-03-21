@@ -4,9 +4,7 @@ import dev.sorn.orc.api.Result;
 import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.types.Id;
 import tools.jackson.databind.JsonNode;
-
 import java.nio.file.Path;
-
 import static java.lang.System.getProperty;
 
 public class PrintWorkingDirectoryTool implements Tool<Void, Path> {

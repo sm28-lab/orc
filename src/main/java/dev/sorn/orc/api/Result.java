@@ -1,7 +1,6 @@
 package dev.sorn.orc.api;
 
 import dev.sorn.orc.errors.OrcException;
-
 import java.util.function.Function;
 
 public sealed interface Result<T> permits Result.Success, Result.Failure {
