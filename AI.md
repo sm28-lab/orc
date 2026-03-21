@@ -13,6 +13,7 @@
 * Minimal changes to achieve result.
 * Small, focused classes, and interface segregation.
 * Hacks are never allowed.
+* Keep It Simple, Stupid (KISS).
 
 ### Code Style
 

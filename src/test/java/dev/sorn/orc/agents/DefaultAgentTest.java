@@ -62,19 +62,27 @@ class DefaultAgentTest implements DefaultAgentTestData {
                 ## Instructions
                 GIVEN: Instruction1
                 WHEN: Instruction2
-
-                ## Tool Usage Rules
+                
+                ## Current Working Directory
+                /Users/sorn/Projects/orc
+                
+                ## Available Tools
+                
+                ## Efficiency Guidelines
+                - Use **grep_tool** to search for files by name or content (it can search recursively).
+                - Use **list_directory_contents_tool** only for listing a single directory’s immediate children (non‑recursive).
+                - Avoid calling list_directory_contents_tool repeatedly for deep searches; use grep_tool instead.
+                
+                ## Tool Usage Format
                 You can use tools by outputting a tool call in the following strict format:
                 <tool_call>
                 {
                   "tool": "tool_id",
-                  "arguments": {
-                    ... arguments as JSON ...
-                  }
+                  "arguments": { ... }
                 }
                 </tool_call>
                 You may output multiple tool calls. After each tool call you will receive the result. Then you can output more tool calls or the final answer.
-
+                
                 ## User Input
                 My prompt
                 """);

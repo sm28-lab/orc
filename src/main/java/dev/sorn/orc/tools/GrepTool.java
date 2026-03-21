@@ -49,7 +49,6 @@ public final class GrepTool implements Tool<GrepTool.Input, List<GrepTool.Match>
                             }
                         }
                     } catch (UncheckedIOException e) {
-                        // Skip files that cause encoding errors and treat as no match
                         continue;
                     }
                 }

@@ -1,4 +1,3 @@
-// Path: src/main/java/dev/sorn/orc/agents/DefaultAgent.java
 package dev.sorn.orc.agents;
 
 import dev.sorn.orc.api.LlmClient;
