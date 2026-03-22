@@ -4,6 +4,7 @@ import io.vavr.jackson.datatype.VavrModule;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.JsonNodeFactory;
 import tools.jackson.databind.node.ObjectNode;
 import static tools.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
@@ -31,6 +32,10 @@ public final class Json {
 
     public static ObjectNode jsonObjectNode() {
         return JsonNodeFactory.instance.objectNode();
+    }
+
+    public static ArrayNode jsonArrayNode() {
+        return JsonNodeFactory.instance.arrayNode();
     }
 
     public static <T> T fromJsonNode(JsonNode node, Class<T> type) {

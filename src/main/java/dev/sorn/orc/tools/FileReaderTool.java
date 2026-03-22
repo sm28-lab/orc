@@ -31,12 +31,12 @@ public final class FileReaderTool implements Tool<FileReaderTool.Input, String> 
 
     @Override
     public Result<String> execute(Input input) {
-        var path = input.path();
-        var range = input.lineNumberRange();
-        var from = range.from().map(LineNumber::value).getOrElse(1);
-        var to = range.to().map(LineNumber::value).getOrElse(MAX_VALUE);
-        try (var reader = new BufferedReader(readerFactory.create(path))) {
-            var result = reader.lines()
+        final var path = input.path();
+        final var range = input.lineNumberRange();
+        final var from = range.from().map(LineNumber::value).getOrElse(1);
+        final var to = range.to().map(LineNumber::value).getOrElse(MAX_VALUE);
+        try (final var reader = new BufferedReader(readerFactory.create(path))) {
+            final var result = reader.lines()
                 .skip(from - 1)
                 .limit(to - from)
                 .collect(joining("\n"));
@@ -56,27 +56,31 @@ public final class FileReaderTool implements Tool<FileReaderTool.Input, String> 
         if (!node.isObject()) {
             throw new OrcException("FileReaderTool expects an object with 'path' and optional 'lineNumberRange'");
         }
-        var path = Path.of(node.get("path").asText());
-        var rangeNode = node.get("lineNumberRange");
-        LineNumberRange range;
+        final var path = Path.of(node.get("path").asText());
+        final var rangeNode = node.get("lineNumberRange");
+        final var range = parseRange(rangeNode);
+        return new Input(path, range);
+    }
+
+    private static LineNumberRange parseRange(JsonNode rangeNode) {
         if (rangeNode == null || rangeNode.isNull()) {
-            range = LineNumberRange.empty();
-        } else if (rangeNode.isObject()) {
-            var fromNode = rangeNode.get("from");
-            var toNode = rangeNode.get("to");
-            if (fromNode != null && !fromNode.isNull() && toNode != null && !toNode.isNull()) {
-                range = LineNumberRange.of(fromNode.asInt(), toNode.asInt());
-            } else if (fromNode != null && !fromNode.isNull()) {
-                range = LineNumberRange.from(LineNumber.of(fromNode.asInt()));
-            } else if (toNode != null && !toNode.isNull()) {
-                range = LineNumberRange.to(LineNumber.of(toNode.asInt()));
-            } else {
-                range = LineNumberRange.empty();
-            }
-        } else {
+            return LineNumberRange.empty();
+        }
+        if (!rangeNode.isObject()) {
             throw new OrcException("lineNumberRange must be an object");
         }
-        return new Input(path, range);
+        final var fromNode = rangeNode.get("from");
+        final var toNode = rangeNode.get("to");
+        if (fromNode != null && !fromNode.isNull() && toNode != null && !toNode.isNull()) {
+            return LineNumberRange.of(fromNode.asInt(), toNode.asInt());
+        }
+        if (fromNode != null && !fromNode.isNull()) {
+            return LineNumberRange.from(LineNumber.of(fromNode.asInt()));
+        }
+        if (toNode != null && !toNode.isNull()) {
+            return LineNumberRange.to(LineNumber.of(toNode.asInt()));
+        }
+        return LineNumberRange.empty();
     }
 
     @Override

@@ -22,21 +22,21 @@ public final class FileWriterTool implements Tool<FileWriterTool.Input, String> 
     @Override
     public Result<String> execute(Input input) {
         try {
-            var path = input.path();
-            var content = input.content();
+            final var path = input.path();
+            final var content = input.content();
 
             if (path.getParent() != null) {
                 Files.createDirectories(path.getParent());
             }
 
-            var existedBefore = Files.exists(path);
-            var options = existedBefore
+            final var existedBefore = Files.exists(path);
+            final var options = existedBefore
                 ? new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.APPEND}
                 : new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
 
             Files.write(path, content.getBytes(), options);
 
-            var message = String.format("File written to: %s (%d bytes)%s",
+            final var message = String.format("File written to: %s (%d bytes)%s",
                 path.toAbsolutePath(),
                 content.length(),
                 existedBefore ? " (appended)" : "");
@@ -58,8 +58,8 @@ public final class FileWriterTool implements Tool<FileWriterTool.Input, String> 
             throw new OrcException("FileWriterTool expects an object with 'path' and 'content' fields");
         }
 
-        var pathNode = node.get("path");
-        var contentNode = node.get("content");
+        final var pathNode = node.get("path");
+        final var contentNode = node.get("content");
 
         if (pathNode == null || pathNode.isNull()) {
             throw new OrcException("'path' is required");
@@ -68,8 +68,8 @@ public final class FileWriterTool implements Tool<FileWriterTool.Input, String> 
             throw new OrcException("'content' is required");
         }
 
-        var path = Path.of(pathNode.asText());
-        var content = contentNode.asText();
+        final var path = Path.of(pathNode.asText());
+        final var content = contentNode.asText();
 
         return new Input(path, content);
     }

@@ -5,6 +5,7 @@ import dev.sorn.orc.api.ToolRegistry;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.tools.FileReaderTool;
 import dev.sorn.orc.tools.FileWriterTool;
+import dev.sorn.orc.tools.GradleTool;
 import dev.sorn.orc.tools.GrepTool;
 import dev.sorn.orc.tools.ListDirectoryContentsTool;
 import dev.sorn.orc.tools.PrintWorkingDirectoryTool;
@@ -23,6 +24,7 @@ public class StubToolRegistry implements ToolRegistry {
         register(new PrintWorkingDirectoryTool());
         register(new GrepTool());
         register(new FileWriterTool());
+        register(new GradleTool());
     }
 
     @Override
@@ -47,4 +49,5 @@ public class StubToolRegistry implements ToolRegistry {
     public int size() {
         return tools.size();
     }
+
 }

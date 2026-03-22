@@ -26,23 +26,23 @@ public final class GrepTool implements Tool<GrepTool.Input, List<GrepTool.Match>
     @Override
     public Result<List<Match>> execute(Input input) {
         try {
-            var pattern = input.caseSensitive()
+            final var pattern = input.caseSensitive()
                 ? Pattern.compile(input.pattern())
                 : Pattern.compile(input.pattern(), Pattern.CASE_INSENSITIVE);
 
             var matches = List.<Match>empty();
-            var walk = Files.walk(input.path());
+            final var walk = Files.walk(input.path());
 
             try (walk) {
-                var paths = walk.filter(Files::isRegularFile).iterator();
+                final var paths = walk.filter(Files::isRegularFile).iterator();
                 while (paths.hasNext()) {
-                    var file = paths.next();
-                    try (var lines = lines(file)) {
-                        var iterator = lines.iterator();
+                    final var file = paths.next();
+                    try (final var lines = lines(file)) {
+                        final var iterator = lines.iterator();
                         var lineNumber = 0;
                         while (iterator.hasNext()) {
                             lineNumber++;
-                            var line = iterator.next();
+                            final var line = iterator.next();
                             if (pattern.matcher(line).find()) {
                                 matches = matches.append(new Match(file, LineNumber.of(lineNumber)));
                             }
@@ -68,10 +68,10 @@ public final class GrepTool implements Tool<GrepTool.Input, List<GrepTool.Match>
         if (!node.isObject()) {
             throw new OrcException("GrepTool expects an object with 'pattern' and 'path' fields");
         }
-        var pattern = node.get("pattern").asText();
-        var path = Path.of(node.get("path").asText());
-        var recursive = node.has("recursive") && node.get("recursive").asBoolean();
-        var caseSensitive = !node.has("caseSensitive") || node.get("caseSensitive").asBoolean();
+        final var pattern = node.get("pattern").asText();
+        final var path = Path.of(node.get("path").asText());
+        final var recursive = node.has("recursive") && node.get("recursive").asBoolean();
+        final var caseSensitive = !node.has("caseSensitive") || node.get("caseSensitive").asBoolean();
         return new Input(pattern, path, recursive, caseSensitive);
     }
 

@@ -29,8 +29,8 @@ public final class ListDirectoryContentsTool implements Tool<Path, List<String>>
             if (!isDirectory(directory)) {
                 throw new OrcException("'%s' is not a directory", directory);
             }
-            try (var stream = list(directory)) {
-                var list = stream
+            try (final var stream = list(directory)) {
+                final var list = stream
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .toList();

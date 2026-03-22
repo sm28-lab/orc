@@ -9,7 +9,7 @@ public record AgentDefinition(
     List<Id> toolIds,
     List<AgentData> inputs,
     List<AgentData> outputs,
-    List<BddInstruction> instructions,
+    List<BddInstructionGroup> instructions,
     String modelId,
     String baseUrl,
     int maxTokens
@@ -23,7 +23,7 @@ public record AgentDefinition(
             builder.toolIds,
             builder.inputs,
             builder.outputs,
-            builder.instructions,
+            builder.instructionGroups,
             builder.modelId,
             builder.baseUrl,
             builder.maxTokens);
@@ -36,7 +36,7 @@ public record AgentDefinition(
         private List<Id> toolIds;
         private List<AgentData> inputs;
         private List<AgentData> outputs;
-        private List<BddInstruction> instructions;
+        private List<BddInstructionGroup> instructionGroups;
         private String modelId;
         private String baseUrl;
         private int maxTokens = 2048;
@@ -72,8 +72,8 @@ public record AgentDefinition(
             return this;
         }
 
-        public Builder instructions(List<BddInstruction> instructions) {
-            this.instructions = instructions;
+        public Builder instructionGroups(List<BddInstructionGroup> instructionGroups) {
+            this.instructionGroups = instructionGroups;
             return this;
         }
 

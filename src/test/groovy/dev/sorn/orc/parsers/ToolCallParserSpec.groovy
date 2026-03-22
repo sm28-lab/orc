@@ -3,6 +3,7 @@ package dev.sorn.orc.parsers
 import dev.sorn.orc.OrcSpecification
 import dev.sorn.orc.errors.OrcException
 import dev.sorn.orc.types.Id
+import tools.jackson.core.exc.StreamReadException
 
 class ToolCallParserSpec extends OrcSpecification {
 
@@ -57,8 +58,8 @@ class ToolCallParserSpec extends OrcSpecification {
         ToolCallParser.parse(text)
 
         then:
-        def ex = thrown(OrcException)
-        ex.message.contains("Invalid JSON in tool call")
+        def ex = thrown(StreamReadException)
+        ex.message.contains("was expecting double-quote to start property name")
     }
 
     def "throws on missing fields"() {

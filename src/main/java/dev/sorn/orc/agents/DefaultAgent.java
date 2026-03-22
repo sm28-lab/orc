@@ -7,9 +7,11 @@ import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.errors.ToolCallException;
 import dev.sorn.orc.json.Json;
 import dev.sorn.orc.parsers.ToolCallParser;
+import dev.sorn.orc.types.AgentData;
 import dev.sorn.orc.types.AgentDefinition;
 import dev.sorn.orc.types.ToolCall;
 import io.vavr.collection.List;
+import tools.jackson.databind.JsonNode;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
@@ -26,18 +28,26 @@ public final class DefaultAgent extends BaseAgent {
 
     private void log(String msg) {
         if (progressConsumer != null) {
-            progressConsumer.accept(msg);
+            progressConsumer.accept("[" + agentDefinition.id().value() + "] " + msg);
         } else {
-            System.err.println("[DEBUG] " + msg);
+            System.err.println("[DEBUG] [" + agentDefinition.id().value() + "] " + msg);
         }
     }
 
     @Override
-    public Result<String> complete(String prompt) {
-        var conversation = new StringBuilder();
+    public Result<JsonNode> execute(JsonNode input) {
+        var validation = validateInput(input);
+        if (validation instanceof Result.Failure<?>(OrcException ex)) {
+            return Result.Failure.of(new OrcException((ex.getMessage())));
+        }
+
+        final var conversation = new StringBuilder();
         conversation.append("## Instructions\n");
-        agentDefinition.instructions().forEach(instruction -> {
-            conversation.append(instruction.type()).append(": ").append(instruction.text()).append("\n");
+        agentDefinition.instructions().forEach(group -> {
+            group.given().forEach(text -> conversation.append("GIVEN: ").append(text).append("\n"));
+            group.when().forEach(text -> conversation.append("WHEN: ").append(text).append("\n"));
+            group.then().forEach(text -> conversation.append("THEN: ").append(text).append("\n"));
+            conversation.append("\n");
         });
         conversation.append("\n## Current Working Directory\n")
             .append(Path.of("").toAbsolutePath().normalize().toString())
@@ -63,19 +73,30 @@ public final class DefaultAgent extends BaseAgent {
             </tool_call>
             You may output multiple tool calls. After each tool call you will receive the result. Then you can output more tool calls or the final answer.
             """);
-        conversation.append("\n## User Input\n").append(prompt).append("\n");
+
+        conversation.append("\n## Input\n");
+        conversation.append(Json.toJson(input)).append("\n");
+
+        conversation.append("\n## Output Schema\n");
+        conversation.append("The final answer must be a JSON object with the following fields:\n");
+        agentDefinition.outputs().forEach(output -> {
+            conversation.append("- ").append(output.name()).append(": ").append(output.type().name()).append("\n");
+        });
+        conversation.append("\nYour final answer must be a valid JSON object matching this schema.\n");
 
         var iteration = 0;
         var lastToolCall = new ToolCall(null, null);
         var repeatCount = 0;
+        var consecutiveInvalid = 0;
+        String lastInvalidResponse = null;
 
         while (iteration < MAX_ITERATIONS) {
             log("Iteration " + (iteration + 1) + " - calling LLM");
-            var llmResult = llmClient.complete(conversation.toString());
+            final var llmResult = llmClient.complete(conversation.toString());
             if (llmResult instanceof Result.Failure<String> failure) {
-                return failure;
+                return Result.Failure.of(new OrcException(failure.value()));
             }
-            var response = ((Result.Success<String>) llmResult).value();
+            final var response = ((Result.Success<String>) llmResult).value();
             log("LLM response received, length: " + response.length());
 
             if (response == null || response.isBlank()) {
@@ -96,7 +117,35 @@ public final class DefaultAgent extends BaseAgent {
             }
 
             if (toolCalls.isEmpty()) {
-                return Result.Success.of(response);
+                try {
+                    final var finalNode = Json.fromJson(response);
+                    var validationResult = validateOutput(finalNode);
+                    if (validationResult instanceof Result.Failure<?>(OrcException ex)) {
+                        // Check for repeated invalid output
+                        if (lastInvalidResponse != null && lastInvalidResponse.equals(response)) {
+                            consecutiveInvalid++;
+                            if (consecutiveInvalid >= 3) {
+                                log("Repeated invalid output 3 times, giving up");
+                                return Result.Failure.of(new OrcException("Agent failed to produce valid output after multiple attempts"));
+                            }
+                        } else {
+                            consecutiveInvalid = 1;
+                            lastInvalidResponse = response;
+                        }
+                        conversation.append("## Assistant\n").append(response).append("\n");
+                        conversation.append("## Output Validation Error\n").append(ex.getMessage()).append("\n");
+                        // Append expected schema for clarity
+                        conversation.append("Expected output schema: ").append(describeOutputSchema()).append("\n");
+                        iteration++;
+                        continue;
+                    }
+                    return Result.Success.of(finalNode);
+                } catch (Exception e) {
+                    conversation.append("## Assistant\n").append(response).append("\n");
+                    conversation.append("## Invalid JSON Output\n").append(e.getMessage()).append("\n");
+                    iteration++;
+                    continue;
+                }
             }
 
             if (!toolCalls.isEmpty() && toolCalls.get(0).equals(lastToolCall)) {
@@ -112,14 +161,14 @@ public final class DefaultAgent extends BaseAgent {
 
             conversation.append("## Assistant\n").append(response).append("\n");
             conversation.append("## Tool Results\n");
-            for (var toolCall : toolCalls) {
+            for (final var toolCall : toolCalls) {
                 log("Executing tool: " + toolCall.toolId().value());
                 log("Arguments: " + Json.toJson(toolCall.arguments()));
                 try {
-                    var tool = toolRegistry.get(toolCall.toolId());
-                    var input = tool.parseArguments(toolCall.arguments());
-                    var result = tool.execute(input);
-                    var resultStr = result.fold(
+                    final var tool = toolRegistry.get(toolCall.toolId());
+                    final var inputObj = tool.parseArguments(toolCall.arguments());
+                    final var result = tool.execute(inputObj);
+                    final var resultStr = result.fold(
                         val -> {
                             log("Tool succeeded, result length: " + (val != null ? val.toString().length() : 0));
                             return Json.toJson(val);
@@ -140,6 +189,57 @@ public final class DefaultAgent extends BaseAgent {
             iteration++;
         }
         return Result.Failure.of(new OrcException("Maximum tool call iterations reached"));
+    }
+
+    private Result<Void> validateInput(JsonNode input) {
+        return validateAgainstSchema(input, agentDefinition.inputs());
+    }
+
+    private Result<Void> validateOutput(JsonNode output) {
+        return validateAgainstSchema(output, agentDefinition.outputs());
+    }
+
+    private Result<Void> validateAgainstSchema(JsonNode node, List<AgentData> schema) {
+        if (!node.isObject()) {
+            return Result.Failure.of(new OrcException("Input must be a JSON object"));
+        }
+        for (var field : schema) {
+            if (!node.has(field.name())) {
+                return Result.Failure.of(new OrcException("Missing required field: " + field.name()));
+            }
+            var value = node.get(field.name());
+            var type = field.type();
+            switch (type) {
+                case STRING:
+                    if (!value.isTextual()) {
+                        return Result.Failure.of(new OrcException("Field '" + field.name() + "' must be a string"));
+                    }
+                    break;
+                case BOOLEAN:
+                    if (!value.isBoolean()) {
+                        return Result.Failure.of(new OrcException("Field '" + field.name() + "' must be a boolean"));
+                    }
+                    break;
+                case COLLECTION:
+                    if (!value.isArray()) {
+                        return Result.Failure.of(new OrcException("Field '" + field.name() + "' must be an array"));
+                    }
+                    break;
+            }
+        }
+        return Result.Success.of(null);
+    }
+
+    private String describeOutputSchema() {
+        var sb = new StringBuilder("{ ");
+        var first = true;
+        for (var output : agentDefinition.outputs()) {
+            if (!first) sb.append(", ");
+            sb.append(output.name()).append(": ").append(output.type().name().toLowerCase());
+            first = false;
+        }
+        sb.append(" }");
+        return sb.toString();
     }
 
     public static final class Builder {

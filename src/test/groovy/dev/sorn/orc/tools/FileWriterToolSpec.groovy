@@ -3,8 +3,10 @@ package dev.sorn.orc.tools
 import dev.sorn.orc.OrcSpecification
 import dev.sorn.orc.errors.OrcException
 import spock.lang.TempDir
+
 import java.nio.file.Files
 import java.nio.file.Path
+
 import static dev.sorn.orc.json.Json.jsonObjectNode
 import static dev.sorn.orc.tools.FileWriterTool.FILE_WRITER_TOOL_ID
 import static java.nio.file.Files.readString
@@ -13,10 +15,6 @@ import static java.nio.file.Files.writeString
 class FileWriterToolSpec extends OrcSpecification {
     @TempDir
     Path tempDir
-
-    def cleanup() {
-        // @TempDir handles cleanup automatically
-    }
 
     def "creates new file when file does not exist"() {
         given:

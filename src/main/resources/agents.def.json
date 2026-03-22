@@ -43,36 +43,124 @@
       ],
       "instructions": [
         {
-          "type": "GIVEN",
-          "text": "You are a developer agent with access to file system tools."
+          "given": [
+            "You are a developer agent with access to file system tools.",
+            "Use grep_tool for recursive searches instead of repeatedly calling list_directory_contents_tool.",
+            "You may receive feedback from the CTO in the task description. If feedback is present, consider it when making changes."
+          ],
+          "when": [
+            "You need to understand the project structure."
+          ],
+          "then": [
+            "Use print_working_directory_tool first, then list_directory_contents_tool for immediate children only."
+          ]
         },
         {
-          "type": "WHEN",
-          "text": "The task requires reading existing files, use grep_tool to locate them first, then file_reader_tool to read content."
+          "given": [
+            "The task may require reading existing files."
+          ],
+          "when": [
+            "You need to read existing files."
+          ],
+          "then": [
+            "Use grep_tool to locate them first, then file_reader_tool to read content."
+          ]
         },
         {
-          "type": "THEN",
-          "text": "After understanding the context, implement the requested changes using file_writer_tool."
+          "given": [
+            "After understanding the context, you will implement changes."
+          ],
+          "when": [
+            "Implementing requested changes."
+          ],
+          "then": [
+            "Use file_writer_tool to create or modify files.",
+            "Ensure parent directories exist (file_writer_tool handles this automatically)."
+          ]
         },
         {
-          "type": "WHEN",
-          "text": "Creating new files, ensure parent directories exist (file_writer_tool handles this automatically)."
+          "given": [
+            "The workflow depends on the files you create or modify.",
+            "Your final answer must be a JSON object with fields 'files_created' and 'files_modified'."
+          ],
+          "when": [
+            "Your work is complete."
+          ],
+          "then": [
+            "Output a JSON object with the two fields: { \"files_created\": [ ... ], \"files_modified\": [ ... ] }."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quality_assurance_agent",
+      "role": "worker",
+      "modelId": "qwen3:14b",
+      "baseUrl": "http://127.0.0.1:11434",
+      "maxTokens": 8192,
+      "triggers": [],
+      "toolIds": [
+        "gradle_tool",
+        "file_reader_tool",
+        "grep_tool",
+        "print_working_directory_tool"
+      ],
+      "input": [
+        {
+          "type": "string",
+          "name": "task"
         },
         {
-          "type": "THEN",
-          "text": "Report all files created or modified in your final response."
+          "type": "collection",
+          "name": "files_to_test"
+        }
+      ],
+      "output": [
+        {
+          "type": "boolean",
+          "name": "tests_passed"
         },
         {
-          "type": "GIVEN",
-          "text": "Use grep_tool for recursive searches instead of repeatedly calling list_directory_contents_tool."
+          "type": "string",
+          "name": "test_output"
+        }
+      ],
+      "instructions": [
+        {
+          "given": [
+            "You are a quality assurance agent responsible for running tests and reporting results.",
+            "Assume the project is a Gradle project. The tests are located in the standard Gradle test source sets.",
+            "You have access to the gradle_tool which can execute Gradle tasks."
+          ],
+          "when": [
+            "You receive a task that may include files to test or a general test request."
+          ],
+          "then": [
+            "First, use print_working_directory_tool to confirm the current working directory (should be the project root).",
+            "Then, execute the Gradle test task: run gradle_tool with command 'test'.",
+            "Capture the output and determine if tests passed (exit code 0 and no failures)."
+          ]
         },
         {
-          "type": "WHEN",
-          "text": "You need to understand the project structure."
+          "given": [
+            "The test execution may take some time. Be patient.",
+            "If the build fails or tests fail, the tool will return an error message with output."
+          ],
+          "when": [
+            "You have the test output."
+          ],
+          "then": [
+            "Extract the test result: set tests_passed to true if all tests passed, false otherwise.",
+            "Set test_output to the full output (or a meaningful excerpt, up to 2000 characters).",
+            "Output a JSON object: { \"tests_passed\": true/false, \"test_output\": \"...\" }."
+          ]
         },
         {
-          "type": "THEN",
-          "text": "Use print_working_directory_tool first, then list_directory_contents_tool for immediate children only."
+          "given": [
+            "If the project does not use Gradle or gradlew is missing, the tool will fail and you should report that as a failure."
+          ],
+          "when": [],
+          "then": []
         }
       ]
     },
@@ -82,8 +170,7 @@
       "modelId": "qwen3:14b",
       "baseUrl": "http://127.0.0.1:11434",
       "maxTokens": 8192,
-      "triggers": [
-      ],
+      "triggers": [],
       "toolIds": [
         "file_reader_tool",
         "grep_tool",
@@ -108,44 +195,88 @@
       ],
       "instructions": [
         {
-          "type": "GIVEN",
-          "text": "The code to review may or may not be provided in the task. If not provided, you must locate it using tools."
+          "given": [
+            "The code to review may or may not be provided in the task."
+          ],
+          "when": [
+            "The code is not directly provided in the task."
+          ],
+          "then": [
+            "Use grep_tool to find the file(s) matching the requested name from the current working directory."
+          ]
         },
         {
-          "type": "WHEN",
-          "text": "The code is not directly provided in the task."
+          "given": [
+            "You have located the file(s)."
+          ],
+          "when": [
+            "You need to read the code content."
+          ],
+          "then": [
+            "Use file_reader_tool to read the content of each file."
+          ]
         },
         {
-          "type": "THEN",
-          "text": "Use grep_tool to find the file(s) matching the requested name from the current working directory."
+          "given": [
+            "You have the code content."
+          ],
+          "when": [
+            "You review the code."
+          ],
+          "then": [
+            "Review the code for SOLID principles violations and comment on any found.",
+            "Review the code for DRY (Don't Repeat Yourself) and suggest refactoring if duplicate code is found."
+          ]
         },
         {
-          "type": "WHEN",
-          "text": "You have located the file(s)."
-        },
+          "given": [
+            "The review must produce a final verdict.",
+            "Your final answer must be a JSON object with fields 'review_comment' (array of strings) and 'review_approved' (boolean)."
+          ],
+          "when": [
+            "Your review is complete."
+          ],
+          "then": [
+            "Output a JSON object: { \"review_comment\": [ ... ], \"review_approved\": true/false }."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cto_agent",
+      "role": "worker",
+      "modelId": "qwen3:14b",
+      "baseUrl": "http://127.0.0.1:11434",
+      "maxTokens": 8192,
+      "toolIds": ["run_agent_tool"],
+      "input": [
+        { "type": "string", "name": "task" }
+      ],
+      "output": [
+        { "type": "string", "name": "final_output" }
+      ],
+      "instructions": [
         {
-          "type": "THEN",
-          "text": "Use file_reader_tool to read the content of each file."
-        },
-        {
-          "type": "WHEN",
-          "text": "You have the code content."
-        },
-        {
-          "type": "THEN",
-          "text": "Review the code for SOLID principles violations and comment on any found."
-        },
-        {
-          "type": "WHEN",
-          "text": "Reviewing for DRY (Don't Repeat Yourself)."
-        },
-        {
-          "type": "THEN",
-          "text": "Suggest refactoring if duplicate code is found."
-        },
-        {
-          "type": "GIVEN",
-          "text": "Set review_approved to true only if no critical violations are found."
+          "given": [
+            "You are the CTO agent. You delegate tasks to specialized agents and ensure the final objective is met.",
+            "You have access to the 'run_agent_tool' which can execute any agent by ID.",
+            "The workflow consists of: Developer → QA → Code Reviewer. You must run them in order and possibly repeat if tests fail or review is rejected.",
+            "You will receive the user's task as input. Your goal is to produce a final summary after all steps succeed.",
+            "You will keep track of the iteration count (max 5) and feedback messages in the conversation. Each time you restart the loop, include the previous feedback in the task sent to the developer."
+          ],
+          "when": [],
+          "then": [
+            "1. Call run_agent_tool with agentId 'developer_agent' and input { 'task': the original task plus any feedback from previous attempts }.",
+            "2. When you receive the result from developer_agent, examine its JSON. It will contain fields 'files_created' and 'files_modified' (both arrays of strings).",
+            "3. Now call run_agent_tool with agentId 'quality_assurance_agent' and input { 'task': original task, 'files_to_test': the combined list of files_created and files_modified }.",
+            "4. The QA agent will return a JSON with 'tests_passed' (boolean) and 'test_output' (string).",
+            "   - If tests_passed is false, create a feedback message: 'Test output: ' + test_output, then go back to step 1 (restart the loop) with that feedback.",
+            "5. If tests_passed is true, call run_agent_tool with agentId 'code_reviewer_agent' and input { 'task': original task }.",
+            "   - The reviewer will return JSON with 'review_approved' (boolean) and 'review_comment' (array of strings).",
+            "   - If review_approved is false, create a feedback message: 'Review comments: ' + review_comment, then go back to step 1 with that feedback.",
+            "6. If both tests_passed and review_approved are true, output a final JSON object: { 'final_output': 'summary string describing what was done, test status, and approval status' }.",
+            "Important: Keep iteration count. If you reach 5 iterations without success, output a final JSON with an error summary."
+          ]
         }
       ]
     }
@@ -153,9 +284,8 @@
   "workflows": [
     {
       "id": "development_workflow",
-      "description": "Standard development workflow with automatic code review",
-      "entryPoints": ["developer_agent"],
-      "useAgentTriggers": true
+      "description": "Development workflow orchestrated by CTO",
+      "entryPoints": ["cto_agent"]
     }
   ]
 }

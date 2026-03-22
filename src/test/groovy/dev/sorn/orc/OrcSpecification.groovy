@@ -22,11 +22,12 @@ class OrcSpecification extends Specification {
     }
 
     def setupSpec() {
-        toolRegistry.register(new ListDirectoryContentsTool())
-        toolRegistry.register(new PrintWorkingDirectoryTool())
         toolRegistry.register(new FileReaderTool(readerFactory))
         toolRegistry.register(new FileWriterTool())
+        toolRegistry.register(new GradleTool())
         toolRegistry.register(new GrepTool())
+        toolRegistry.register(new ListDirectoryContentsTool())
+        toolRegistry.register(new PrintWorkingDirectoryTool())
     }
 
 }

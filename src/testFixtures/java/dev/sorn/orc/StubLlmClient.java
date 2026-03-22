@@ -10,7 +10,7 @@ import java.util.Map;
 public class StubLlmClient implements LlmClient {
 
     private final Map<String, String> responses = new HashMap<>();
-    private String defaultResponse = "Stub LLM response";
+    private String defaultResponse = "{}";
     private String currentPrompt;
 
     @Override

@@ -8,13 +8,14 @@ import dev.sorn.orc.types.AgentData;
 import dev.sorn.orc.types.AgentDefinition;
 import dev.sorn.orc.types.AgentRole;
 import dev.sorn.orc.types.AgentTrigger;
-import dev.sorn.orc.types.BddInstruction;
+import dev.sorn.orc.types.BddInstructionGroup;
 import dev.sorn.orc.types.Id;
 import io.vavr.collection.List;
 import java.util.Objects;
 import static java.util.Objects.hash;
 
 public abstract class BaseAgent implements Agent {
+
     protected final AgentDefinition agentDefinition;
     protected final ToolRegistry toolRegistry;
     protected final LlmClient llmClient;
@@ -60,7 +61,7 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public final List<BddInstruction> instructions() {
+    public final List<BddInstructionGroup> instructions() {
         return agentDefinition.instructions();
     }
 
@@ -76,4 +77,5 @@ public abstract class BaseAgent implements Agent {
     public int hashCode() {
         return hash(id());
     }
+
 }

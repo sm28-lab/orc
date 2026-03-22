@@ -5,7 +5,7 @@ import dev.sorn.orc.api.LlmClient;
 import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.api.ToolRegistry;
 import dev.sorn.orc.types.AgentDefinition;
-import dev.sorn.orc.types.BddInstruction;
+import dev.sorn.orc.types.BddInstructionGroup;
 import dev.sorn.orc.types.Id;
 import io.vavr.collection.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Path;
 import static dev.sorn.orc.agents.DefaultAgent.Builder.defaultAgent;
 import static dev.sorn.orc.api.Result.Success;
+import static dev.sorn.orc.json.Json.jsonObjectNode;
 import static dev.sorn.orc.types.AgentRole.WORKER;
 import static dev.sorn.orc.types.Id.of;
 import static io.vavr.collection.List.empty;
@@ -36,36 +37,37 @@ class DefaultAgentTest implements DefaultAgentTestData {
         .build();
 
     @Test
-    void completes_prompt_with_instructions() {
+    void executes_with_input() {
         // GIVEN
-        var prompt = "My prompt";
+        var input = jsonObjectNode().put("task", "My task");
         given(definition.id()).willReturn(of("agent1"));
         given(definition.role()).willReturn(WORKER);
         given(definition.toolIds()).willReturn(empty());
         given(definition.inputs()).willReturn(empty());
         given(definition.outputs()).willReturn(empty());
         given(definition.instructions()).willReturn(List.of(
-            BddInstruction.given("Instruction1"),
-            BddInstruction.when("Instruction2")));
-        given(llmClient.complete(anyString())).willReturn(Success.of("Some LLM response"));
+            BddInstructionGroup.of("instruction 1", "instruction 2", "instruction 3")));
+        given(definition.outputs()).willReturn(List.of());
+        given(llmClient.complete(anyString())).willReturn(Success.of("{\"result\": \"done\"}"));
 
         // WHEN
-        var result = agent.complete(prompt);
+        var result = agent.execute(input);
 
         // THEN
         then(llmClient).should(times(1)).complete(argThat(actual -> {
             return actual.contains("## Instructions")
-                && actual.contains("GIVEN: Instruction1")
-                && actual.contains("WHEN: Instruction2")
+                && actual.contains("GIVEN: instruction 1")
+                && actual.contains("WHEN: instruction 2")
+                && actual.contains("THEN: instruction 3")
                 && actual.contains("## Current Working Directory")
                 && actual.contains(Path.of("").toAbsolutePath().normalize().toString())
                 && actual.contains("## Available Tools")
                 && actual.contains("## Efficiency Guidelines")
                 && actual.contains("## Tool Usage Format")
-                && actual.contains("## User Input\nMy prompt");
+                && actual.contains("## Input\n{\"task\":\"My task\"}");
         }));
         result.fold(
-            val -> assertThat(val).isEqualTo("Some LLM response"),
+            val -> assertThat(val.get("result").asText()).isEqualTo("done"),
             err -> { throw new AssertionError("Expected success but got failure", err); }
         );
     }
@@ -73,7 +75,7 @@ class DefaultAgentTest implements DefaultAgentTestData {
     @Test
     void includes_tools_in_prompt() {
         // GIVEN
-        var prompt = "Use tools";
+        var input = jsonObjectNode().put("task", "Use tools");
         var fileReaderId = Id.of("file_reader_tool");
         var listDirId = Id.of("list_directory_contents_tool");
         given(definition.id()).willReturn(of("agent_with_tools"));
@@ -81,8 +83,9 @@ class DefaultAgentTest implements DefaultAgentTestData {
         given(definition.toolIds()).willReturn(List.of(fileReaderId, listDirId));
         given(definition.inputs()).willReturn(empty());
         given(definition.outputs()).willReturn(empty());
-        given(definition.instructions()).willReturn(List.of(BddInstruction.given("Use tools wisely")));
-        given(llmClient.complete(anyString())).willReturn(Success.of("I used the tools"));
+        given(definition.instructions())
+            .willReturn(List.of(BddInstructionGroup.of("instruction 1", "instruction 2", "instruction 3")));
+        given(llmClient.complete(anyString())).willReturn(Success.of("{\"result\": \"used tools\"}"));
 
         var fileReaderTool = mock(Tool.class);
         given(fileReaderTool.id()).willReturn(fileReaderId);
@@ -95,7 +98,7 @@ class DefaultAgentTest implements DefaultAgentTestData {
         given(toolRegistry.get(listDirId)).willReturn(listDirTool);
 
         // WHEN
-        var result = agent.complete(prompt);
+        var result = agent.execute(input);
 
         // THEN
         then(llmClient).should(times(1)).complete(argThat(actual -> {
@@ -104,7 +107,7 @@ class DefaultAgentTest implements DefaultAgentTestData {
                 && actual.contains("- list_directory_contents_tool: lists directory");
         }));
         result.fold(
-            val -> assertThat(val).isEqualTo("I used the tools"),
+            val -> assertThat(val.get("result").asText()).isEqualTo("used tools"),
             err -> { throw new AssertionError("Expected success but got failure", err); }
         );
     }

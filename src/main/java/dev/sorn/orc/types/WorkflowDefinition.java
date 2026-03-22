@@ -5,16 +5,14 @@ import io.vavr.collection.List;
 public record WorkflowDefinition(
     Id id,
     String description,
-    List<Id> entryPoints,
-    boolean useAgentTriggers
+    List<Id> entryPoints
 ) {
 
     private WorkflowDefinition(Builder builder) {
         this(
             builder.id,
             builder.description,
-            builder.entryPoints,
-            builder.useAgentTriggers
+            builder.entryPoints
         );
     }
 
@@ -22,7 +20,6 @@ public record WorkflowDefinition(
         private Id id;
         private String description;
         private List<Id> entryPoints = List.empty();
-        private boolean useAgentTriggers = true;
 
         private Builder() {}
 
@@ -42,11 +39,6 @@ public record WorkflowDefinition(
 
         public Builder entryPoints(List<Id> entryPoints) {
             this.entryPoints = entryPoints;
-            return this;
-        }
-
-        public Builder useAgentTriggers(boolean useAgentTriggers) {
-            this.useAgentTriggers = useAgentTriggers;
             return this;
         }
 
