@@ -1,8 +1,8 @@
 package dev.sorn.orc.tools;
 
+import dev.sorn.orc.api.LegacyTool;
 import dev.sorn.orc.api.ReaderFactory;
 import dev.sorn.orc.api.Result;
-import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
 import dev.sorn.orc.types.LineNumber;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.stream.Collectors.joining;
 
-public final class FileReaderTool implements Tool<FileReaderTool.Input, String> {
+public final class FileReaderTool implements LegacyTool<FileReaderTool.Input, String> {
 
     public static final Id FILE_READER_TOOL_ID = Id.of("file_reader_tool");
 

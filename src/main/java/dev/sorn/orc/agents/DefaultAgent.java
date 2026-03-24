@@ -1,8 +1,8 @@
 package dev.sorn.orc.agents;
 
+import dev.sorn.orc.api.LegacyToolRegistry;
 import dev.sorn.orc.api.LlmClient;
 import dev.sorn.orc.api.Result;
-import dev.sorn.orc.api.ToolRegistry;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.errors.ToolCallException;
 import dev.sorn.orc.json.Json;
@@ -244,7 +244,7 @@ public final class DefaultAgent extends BaseAgent {
 
     public static final class Builder {
         private AgentDefinition agentDefinition;
-        private ToolRegistry toolRegistry;
+        private LegacyToolRegistry toolRegistry;
         private LlmClient llmClient;
         private Consumer<String> progressConsumer;
 
@@ -259,7 +259,7 @@ public final class DefaultAgent extends BaseAgent {
             return this;
         }
 
-        public Builder toolRegistry(ToolRegistry toolRegistry) {
+        public Builder toolRegistry(LegacyToolRegistry toolRegistry) {
             this.toolRegistry = toolRegistry;
             return this;
         }

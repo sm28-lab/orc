@@ -1,7 +1,7 @@
 package dev.sorn.orc.tools;
 
 import dev.sorn.orc.api.Result;
-import dev.sorn.orc.api.Tool;
+import dev.sorn.orc.api.LegacyTool;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
 import tools.jackson.databind.JsonNode;
@@ -11,7 +11,7 @@ import static java.nio.file.Files.exists;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.list;
 
-public final class ListDirectoryContentsTool implements Tool<Path, List<String>> {
+public final class ListDirectoryContentsTool implements LegacyTool<Path, List<String>> {
 
     public static final Id LIST_DIRECTORY_CONTENTS_TOOL_ID = Id.of("list_directory_contents_tool");
 

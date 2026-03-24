@@ -1,7 +1,7 @@
 package dev.sorn.orc;
 
-import dev.sorn.orc.api.Tool;
-import dev.sorn.orc.api.ToolRegistry;
+import dev.sorn.orc.api.LegacyTool;
+import dev.sorn.orc.api.LegacyToolRegistry;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.tools.FileReaderTool;
 import dev.sorn.orc.tools.FileWriterTool;
@@ -14,9 +14,9 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StubToolRegistry implements ToolRegistry {
+public class StubToolRegistry implements LegacyToolRegistry {
 
-    private final Map<Id, Tool<?, ?>> tools = new ConcurrentHashMap<>();
+    private final Map<Id, LegacyTool<?, ?>> tools = new ConcurrentHashMap<>();
 
     public StubToolRegistry() {
         register(new FileReaderTool(Files::newBufferedReader));
@@ -29,16 +29,16 @@ public class StubToolRegistry implements ToolRegistry {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <I, O> Tool<I, O> get(Id id) {
+    public <I, O> LegacyTool<I, O> get(Id id) {
         var tool = tools.get(id);
         if (tool == null) {
             throw new OrcException("'%s' tool is not registered", id.value());
         }
-        return (Tool<I, O>) tool;
+        return (LegacyTool<I, O>) tool;
     }
 
     @Override
-    public <I, O> void register(Tool<I, O> tool) {
+    public <I, O> void register(LegacyTool<I, O> tool) {
         var id = tool.id();
         if (tools.containsKey(id)) {
             throw new OrcException("'%s' tool is already registered", id.value());

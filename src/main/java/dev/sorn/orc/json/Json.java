@@ -38,6 +38,22 @@ public final class Json {
         return JsonNodeFactory.instance.arrayNode();
     }
 
+    public static JsonNode jsonTextNode(String value) {
+        return JsonNodeFactory.instance.textNode(value);
+    }
+
+    public static JsonNode jsonNumberNode(double value) {
+        return JsonNodeFactory.instance.numberNode(value);
+    }
+
+    public static JsonNode jsonBooleanNode(boolean value) {
+        return JsonNodeFactory.instance.booleanNode(value);
+    }
+
+    public static JsonNode jsonNullNode() {
+        return JsonNodeFactory.instance.nullNode();
+    }
+
     public static <T> T fromJsonNode(JsonNode node, Class<T> type) {
         if (type == Void.class) {
             return null;

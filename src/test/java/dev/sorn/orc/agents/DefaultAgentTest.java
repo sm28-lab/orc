@@ -1,9 +1,9 @@
 package dev.sorn.orc.agents;
 
 import dev.sorn.orc.DefaultAgentTestData;
+import dev.sorn.orc.api.LegacyTool;
+import dev.sorn.orc.api.LegacyToolRegistry;
 import dev.sorn.orc.api.LlmClient;
-import dev.sorn.orc.api.Tool;
-import dev.sorn.orc.api.ToolRegistry;
 import dev.sorn.orc.types.AgentDefinition;
 import dev.sorn.orc.types.BddInstructionGroup;
 import dev.sorn.orc.types.Id;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.times;
 class DefaultAgentTest implements DefaultAgentTestData {
 
     private final AgentDefinition definition = mock(AgentDefinition.class);
-    private final ToolRegistry toolRegistry = mock(ToolRegistry.class);
+    private final LegacyToolRegistry toolRegistry = mock(LegacyToolRegistry.class);
     private final LlmClient llmClient = mock(LlmClient.class);
     private final DefaultAgent agent = defaultAgent()
         .agentDefinition(definition)
@@ -87,11 +87,11 @@ class DefaultAgentTest implements DefaultAgentTestData {
             .willReturn(List.of(BddInstructionGroup.of("instruction 1", "instruction 2", "instruction 3")));
         given(llmClient.complete(anyString())).willReturn(Success.of("{\"result\": \"used tools\"}"));
 
-        var fileReaderTool = mock(Tool.class);
+        var fileReaderTool = mock(LegacyTool.class);
         given(fileReaderTool.id()).willReturn(fileReaderId);
         given(fileReaderTool.inputDescription()).willReturn("reads files");
 
-        var listDirTool = mock(Tool.class);
+        var listDirTool = mock(LegacyTool.class);
         given(listDirTool.id()).willReturn(listDirId);
         given(listDirTool.inputDescription()).willReturn("lists directory");
         given(toolRegistry.get(fileReaderId)).willReturn(fileReaderTool);

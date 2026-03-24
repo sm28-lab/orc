@@ -1,7 +1,7 @@
 package dev.sorn.orc
 
 import dev.sorn.orc.api.ReaderFactory
-import dev.sorn.orc.api.ToolRegistry
+import dev.sorn.orc.api.LegacyToolRegistry
 import dev.sorn.orc.module.AppToolRegistry
 import dev.sorn.orc.tools.*
 import spock.lang.Shared
@@ -14,7 +14,7 @@ import static java.nio.file.Files.newBufferedReader
 class OrcSpecification extends Specification {
 
     @Shared
-    ToolRegistry toolRegistry = new AppToolRegistry()
+    LegacyToolRegistry toolRegistry = new AppToolRegistry()
 
     @Shared
     ReaderFactory readerFactory = Mock(ReaderFactory) {

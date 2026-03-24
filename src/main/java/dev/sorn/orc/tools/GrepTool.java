@@ -1,7 +1,7 @@
 package dev.sorn.orc.tools;
 
 import dev.sorn.orc.api.Result;
-import dev.sorn.orc.api.Tool;
+import dev.sorn.orc.api.LegacyTool;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
 import dev.sorn.orc.types.LineNumber;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.util.regex.Pattern;
 import static java.nio.file.Files.lines;
 
-public final class GrepTool implements Tool<GrepTool.Input, List<GrepTool.Match>> {
+public final class GrepTool implements LegacyTool<GrepTool.Input, List<GrepTool.Match>> {
 
     public static final Id GREP_TOOL_ID = Id.of("grep_tool");
 

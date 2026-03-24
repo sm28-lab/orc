@@ -3,7 +3,7 @@ package dev.sorn.orc.agents;
 import dev.sorn.orc.StubToolRegistry;
 import dev.sorn.orc.api.LlmClient;
 import dev.sorn.orc.api.Result;
-import dev.sorn.orc.api.ToolRegistry;
+import dev.sorn.orc.api.LegacyToolRegistry;
 import dev.sorn.orc.types.Id;
 import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mock;
 
 class DefaultAgentToolCallTest {
 
-    private final ToolRegistry toolRegistry = new StubToolRegistry();
+    private final LegacyToolRegistry toolRegistry = new StubToolRegistry();
     private final LlmClient llmClient = mock(LlmClient.class);
 
     @Test

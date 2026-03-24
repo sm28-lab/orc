@@ -2,13 +2,13 @@ package dev.sorn.orc.tools;
 
 import dev.sorn.orc.agents.DefaultAgent;
 import dev.sorn.orc.api.Result;
-import dev.sorn.orc.api.Tool;
+import dev.sorn.orc.api.LegacyTool;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
 import tools.jackson.databind.JsonNode;
 import java.util.Map;
 
-public final class RunAgentTool implements Tool<RunAgentTool.Input, JsonNode> {
+public final class RunAgentTool implements LegacyTool<RunAgentTool.Input, JsonNode> {
 
     public static final Id RUN_AGENT_TOOL_ID = Id.of("run_agent_tool");
     private final Map<Id, DefaultAgent> agentMap;

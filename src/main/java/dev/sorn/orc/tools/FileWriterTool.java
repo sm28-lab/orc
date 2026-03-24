@@ -1,7 +1,7 @@
 package dev.sorn.orc.tools;
 
+import dev.sorn.orc.api.LegacyTool;
 import dev.sorn.orc.api.Result;
-import dev.sorn.orc.api.Tool;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
 import tools.jackson.databind.JsonNode;
@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-public final class FileWriterTool implements Tool<FileWriterTool.Input, String> {
+public final class FileWriterTool implements LegacyTool<FileWriterTool.Input, String> {
 
     public static final Id FILE_WRITER_TOOL_ID = Id.of("file_writer_tool");
 

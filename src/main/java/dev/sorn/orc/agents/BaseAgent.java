@@ -1,9 +1,9 @@
 package dev.sorn.orc.agents;
 
 import dev.sorn.orc.api.Agent;
+import dev.sorn.orc.api.LegacyTool;
+import dev.sorn.orc.api.LegacyToolRegistry;
 import dev.sorn.orc.api.LlmClient;
-import dev.sorn.orc.api.Tool;
-import dev.sorn.orc.api.ToolRegistry;
 import dev.sorn.orc.types.AgentData;
 import dev.sorn.orc.types.AgentDefinition;
 import dev.sorn.orc.types.AgentRole;
@@ -17,12 +17,12 @@ import static java.util.Objects.hash;
 public abstract class BaseAgent implements Agent {
 
     protected final AgentDefinition agentDefinition;
-    protected final ToolRegistry toolRegistry;
+    protected final LegacyToolRegistry toolRegistry;
     protected final LlmClient llmClient;
 
     protected BaseAgent(
         AgentDefinition agentDefinition,
-        ToolRegistry toolRegistry,
+        LegacyToolRegistry toolRegistry,
         LlmClient llmClient
     ) {
         this.agentDefinition = agentDefinition;
@@ -46,7 +46,7 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public final List<Tool<?, ?>> tools() {
+    public final List<LegacyTool<?, ?>> tools() {
         return agentDefinition.toolIds().map(toolRegistry::get);
     }
 

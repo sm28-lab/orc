@@ -18,7 +18,7 @@ public interface Agent {
 
     List<AgentTrigger> triggers();
 
-    List<Tool<?, ?>> tools();
+    List<LegacyTool<?, ?>> tools();
 
     List<AgentData> inputs();
 

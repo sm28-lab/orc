@@ -18,7 +18,7 @@ class ToolSpec extends OrcSpecification {
         result.fold(value -> value == "abc", { false })
     }
 
-    static class SomeTool implements Tool<String, String> {
+    static class SomeTool implements LegacyTool<String, String> {
         @Override
         Id id() {
             return Id.of("some_tool")

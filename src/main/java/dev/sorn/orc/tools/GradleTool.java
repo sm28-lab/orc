@@ -1,7 +1,7 @@
 package dev.sorn.orc.tools;
 
 import dev.sorn.orc.api.Result;
-import dev.sorn.orc.api.Tool;
+import dev.sorn.orc.api.LegacyTool;
 import dev.sorn.orc.errors.OrcException;
 import dev.sorn.orc.types.Id;
 import io.vavr.control.Option;
@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public final class GradleTool implements Tool<GradleTool.Input, String> {
+public final class GradleTool implements LegacyTool<GradleTool.Input, String> {
 
     public static final Id GRADLE_TOOL_ID = Id.of("gradle_tool");
 
